@@ -104,8 +104,8 @@
       <nav class="nav">
         <a href="{% url 'home' %}">Авиабилеты</a>
         <a href="#">Отели</a>
-        <a href="#">Карты</a>
-        <a href="#">Фудкорт</a>
+        <a href="{% url 'flights' %}">Карты</a>
+        <a href="#"></a>
       </nav>
       <div class="actions">
         {% if user.is_authenticated %}

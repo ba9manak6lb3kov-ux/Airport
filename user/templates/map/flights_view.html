@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Карта рейсов — FlyFind{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+  #map {
+    height: 600px;
+    border-radius: 12px;
+    margin: 20px auto;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 style="text-align:center; color:#045d75;">Карта рейсов по Кыргызстану</h2>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  // Инициализация карты
+  var map = L.map('map').setView([41.9, 74.6], 6); // центр Кыргызстана
+
+  // Подложка карты
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // Пример рейсов (можно динамически подгружать из Django)
+  var flights = [
+    {
+      airline: "Air Kyrgyzstan",
+      origin: "Бишкек",
+      destination: "Ош",
+      departure: "2025-12-23 08:00",
+      arrival: "2025-12-23 09:00",
+      coords: [40.53, 72.79] // точка назначения (Ош)
+    },
+    {
+      airline: "TezJet",
+      origin: "Бишкек",
+      destination: "Баткен",
+      departure: "2025-12-23 10:00",
+      arrival: "2025-12-23 11:30",
+      coords: [40.06, 70.82]
+    }
+  ];
+
+  flights.forEach(function(flight) {
+    L.marker(flight.coords).addTo(map)
+      .bindPopup(
+        "<b>" + flight.airline + "</b><br>" +
+        flight.origin + " → " + flight.destination + "<br>" +
+        "Вылет: " + flight.departure + "<br>" +
+        "Прилёт: " + flight.arrival
+      );
+  });
+</script>
+{% endblock %}
