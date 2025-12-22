@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Личный кабинет — FlyFind{% endblock %}
+
+{% block extra_head %}
+<style>
+  .profile-container {
+    max-width: 600px;
+    margin: 60px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border: 1px solid #e0f7f5;
+  }
+
+  .profile-container h2 {
+    text-align: center;
+    color: #045d75;
+    margin-bottom: 20px;
+  }
+
+  .profile-container p {
+    font-size: 16px;
+    color: #2c7a7b;
+    margin-bottom: 12px;
+  }
+
+  .btn--accent {
+    display: inline-block;
+    background: linear-gradient(to right, #00c9a7, #00bfa5);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+
+  .btn--accent:hover {
+    background: linear-gradient(to right, #00bfa5, #00a896);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+  <h2>Привет, {{ user.username }}!</h2>
+  <p>Добро пожаловать в личный кабинет FlyFind.</p>
+  <p>Здесь будут отображаться твои заказы, история поиска и настройки профиля.</p>
+  <a href="{% url 'logout' %}" class="btn--accent">Выйти</a>
+</div>
+{% endblock %}

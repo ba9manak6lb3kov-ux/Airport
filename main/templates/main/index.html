@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Главная — FlyFind{% endblock %}
+
+{% block extra_head %}
+<style>
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom, #d7faff 0%, #c2e9fb 40%, #b2f7ef 100%);
+    overflow-x: hidden;
+  }
+
+  .hero {
+    position: relative;
+    padding: 80px 20px 60px;
+    background: linear-gradient(to bottom right, #d7faff, #b2f7ef);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .hero__content {
+    max-width: 600px;
+    z-index: 2;
+  }
+
+  .hero__title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #045d75;
+    margin-bottom: 16px;
+  }
+
+  .hero__subtitle {
+    font-size: 18px;
+    color: #2c7a7b;
+    margin-bottom: 28px;
+  }
+
+  .search-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    border: 1px solid #e0f7f5;
+  }
+
+  .search-card input,
+  .search-card select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #b2e4e0;
+    margin-bottom: 14px;
+    font-size: 16px;
+    background-color: #f7fcfc;
+  }
+
+  .search-card input:focus,
+  .search-card select:focus {
+    border-color: #00bfa5;
+    outline: none;
+  }
+
+  .search-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+  }
+
+  .btn--accent {
+    background: linear-gradient(to right, #00c9a7, #00bfa5);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .btn--accent:hover {
+    background: linear-gradient(to right, #00bfa5, #00a896);
+  }
+
+  .search-meta {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #4a9c9f;
+    text-align: center;
+  }
+
+  .airplane-wing {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background: url("{% static 'img/wing.png' %}") no-repeat right center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.8;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero__content">
+    <h1 class="hero__title">Находим дешёвые перелёты по всему миру</h1>
+    <p class="hero__subtitle">Сравниваем цены, фильтруем варианты и подсказываем лучший момент для покупки.</p>
+
+    <form class="search-card" method="get" action="{% url 'search' %}">
+      <input type="text" name="from" placeholder="Откуда — Бишкек (FRU)">
+      <input type="text" name="to" placeholder="Куда — Стамбул (IST)">
+      <input type="date" name="depart">
+      <input type="date" name="return">
+      <select name="passengers">
+        <option>1 взрослый</option>
+        <option>2 взрослых</option>
+        <option>3 взрослых</option>
+        <option>Семья</option>
+      </select>
+      <select name="class">
+        <option>Эконом</option>
+        <option>Бизнес</option>
+      </select>
+      <div class="search-actions">
+        <label><input type="checkbox" name="direct"> Только прямые</label>
+        <button class="btn--accent" type="submit">Найти билеты</button>
+      </div>
+      <div class="search-meta">
+        Гибкие даты • Умные фильтры • Без скрытых комиссий
+      </div>
+    </form>
+  </div>
+  <div class="airplane-wing"></div>
+</section>
+{% endblock %}

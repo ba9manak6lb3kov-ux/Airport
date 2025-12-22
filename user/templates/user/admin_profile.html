@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Админ-панель — FlyFind{% endblock %}
+
+{% block extra_head %}
+<style>
+  .admin-container {
+    max-width: 700px;
+    margin: 60px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    border: 1px solid #e0f7f5;
+  }
+
+  .admin-container h2 {
+    text-align: center;
+    color: #045d75;
+    margin-bottom: 20px;
+  }
+
+  .admin-container p {
+    font-size: 16px;
+    color: #2c7a7b;
+    margin-bottom: 12px;
+  }
+
+  .admin-actions {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .admin-actions a {
+    display: block;
+    background: linear-gradient(to right, #00c9a7, #00bfa5);
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .admin-actions a:hover {
+    background: linear-gradient(to right, #00bfa5, #00a896);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+  <h2>Добро пожаловать, {{ user.username }} (Админ)</h2>
+  <p>Ты находишься в админ-панели FlyFind.</p>
+  <p>Здесь доступны инструменты управления:</p>
+
+  <div class="admin-actions">
+    <a href="#">Управление пользователями</a>
+    <a href="#">Управление рейсами</a>
+    <a href="#">Просмотр бронирований</a>
+    <a href="{% url 'logout' %}">Выйти</a>
+  </div>
+</div>
+{% endblock %}

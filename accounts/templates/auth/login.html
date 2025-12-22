@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Вход — FlyFind{% endblock %}
+
+{% block extra_head %}
+<style>
+  .auth-container {
+    max-width: 400px;
+    margin: 60px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    border: 1px solid #e0f7f5;
+  }
+
+  .auth-container h2 {
+    text-align: center;
+    color: #045d75;
+    margin-bottom: 20px;
+  }
+
+  .auth-container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: 1px solid #b2e4e0;
+    background: #f7fcfc;
+    font-size: 16px;
+  }
+
+  .auth-container input:focus {
+    border-color: #00bfa5;
+    outline: none;
+  }
+
+  .btn--accent {
+    width: 100%;
+    background: linear-gradient(to right, #00c9a7, #00bfa5);
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .btn--accent:hover {
+    background: linear-gradient(to right, #00bfa5, #00a896);
+  }
+
+  .auth-links {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+  }
+
+  .auth-links a {
+    color: #045d75;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .auth-links a:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <h2>Вход</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Имя пользователя" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+    <button type="submit" class="btn--accent">Войти</button>
+  </form>
+  <div class="auth-links">
+    <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Результаты поиска — FlyFind{% endblock %}
+
+{% block extra_head %}
+<style>
+  .hero {
+    position: relative;
+    padding: 60px 20px;
+    background: linear-gradient(to bottom right, #d7faff, #b2f7ef);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .hero__content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero__title {
+    font-size: 34px;
+    font-weight: 700;
+    color: #045d75;
+    margin-bottom: 20px;
+  }
+
+  .hero__subtitle {
+    font-size: 18px;
+    color: #2c7a7b;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    background: #f7fcfc;
+    border: 1px solid #b2e4e0;
+    border-radius: 12px;
+    padding: 16px;
+    display: inline-block;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  }
+
+  .results-list {
+    display: grid;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .result-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border: 1px solid #e0f7f5;
+    text-align: left;
+  }
+
+  .result-card h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #045d75;
+  }
+
+  .result-card p {
+    margin: 0;
+    color: #2c7a7b;
+    font-size: 15px;
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 12px 24px;
+    background: linear-gradient(to right, #00c9a7, #00bfa5);
+    color: white;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .back-btn:hover {
+    background: linear-gradient(to right, #00bfa5, #00a896);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero__content">
+    <h2 class="hero__title">Результаты поиска</h2>
+    <p class="hero__subtitle">
+      {{ from }} → {{ to }}<br>
+      Вылет: {{ depart }} | Возврат: {{ return }}<br>
+      Пассажиры: {{ passengers }} | Класс: {{ class }}<br>
+      {% if direct %}Только прямые рейсы{% else %}Все варианты{% endif %}
+    </p>
+
+    <!-- Список найденных рейсов -->
+    <div class="results-list">
+      {% for flight in flights %}
+        <div class="result-card">
+          <h3>{{ flight.origin }} → {{ flight.destination }}</h3>
+          <p>Авиакомпания: {{ flight.airline }}</p>
+          <p>Вылет: {{ flight.departure_time }} | Прилёт: {{ flight.arrival_time }}</p>
+          <p>Цена: {{ flight.price }} KGS | Класс: {{ flight.flight_class }}</p>
+        </div>
+      {% empty %}
+        <p style="color:#2c7a7b;">Нет доступных рейсов по вашему запросу.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Кнопка назад -->
+    <a href="{% url 'home' %}" class="back-btn">← Назад</a>
+  </div>
+</section>
+{% endblock %}
