@@ -6,7 +6,7 @@
 {% block extra_head %}
 <style>
   .city-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 40px auto;
     background: #ffffff;
     border-radius: 16px;
@@ -19,6 +19,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 20px;
   }
@@ -26,6 +27,8 @@
   .city-header h2 {
     color: #045d75;
     margin: 0;
+    font-size: 26px;
+    font-weight: 700;
   }
 
   .btn--accent {
@@ -48,10 +51,12 @@
     display: flex;
     gap: 12px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
   }
 
   .search-row input {
     flex: 1;
+    min-width: 240px;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #b2e4e0;
@@ -63,34 +68,76 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    font-size: 15px;
   }
 
   table th, table td {
     border: 1px solid #b2e4e0;
-    padding: 12px;
+    padding: 14px 12px;
     text-align: left;
+    vertical-align: middle;
   }
 
   table th {
-    background: #f0fdfd;
+    background: #e0f7f5;
     color: #045d75;
     font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+  table td {
+    color: #333;
   }
 
   .btn-small {
-    padding: 6px 12px;
+    padding: 6px 14px;
     font-size: 14px;
     border-radius: 8px;
+    display: inline-block;
+    text-align: center;
+    font-weight: 600;
   }
 
-  .btn-edit { background: #00bfa5; }
-  .btn-delete { background: #d9534f; }
+  .btn-edit {
+    background: #00bfa5;
+    color: white;
+  }
+
+  .btn-delete {
+    background: #d9534f;
+    color: white;
+  }
+
   .btn-edit:hover { background: #009688; }
   .btn-delete:hover { background: #c9302c; }
 
   .actions-cell {
     display: flex;
-    gap: 8px;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .empty-row {
+    text-align: center;
+    color: #2c7a7b;
+    font-style: italic;
+    padding: 20px;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin-top: 25px;
+    background: #6c757d;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+  .back-button:hover {
+    background: #5a6268;
   }
 </style>
 {% endblock %}
@@ -99,7 +146,7 @@
 <div class="city-container">
   <div class="city-header">
     <h2>Города Кыргызстана</h2>
-    <a href="{% url 'city_create' %}" class="btn--accent">Добавить город</a>
+    <a href="{% url 'city_create' %}" class="btn--accent">➕ Добавить город</a>
   </div>
 
   <form method="get" class="search-row">
@@ -123,25 +170,40 @@
         {% for city in cities %}
           <tr>
             <td>{{ forloop.counter }}</td>
-            <td>{{ city.name }}</td>
+            <td><strong>{{ city.name }}</strong></td>
             <td>{{ city.region }}</td>
-            <td>{{ city.latitude }}</td>
-            <td>{{ city.longitude }}</td>
+            <td>{{ city.latitude|floatformat:4 }}</td>
+            <td>{{ city.longitude|floatformat:4 }}</td>
             <td class="actions-cell">
-              <a href="{% url 'city_update' city.id %}" class="btn--accent btn-small btn-edit">Редактировать</a>
-              <form method="post" action="{% url 'city_delete' city.id %}">
+              <a href="{% url 'city_update' city.id %}" class="btn-small btn-edit">Редактировать</a>
+              <form method="post" action="{% url 'city_delete' city.id %}" style="margin:0;">
                 {% csrf_token %}
-                <button type="submit" class="btn--accent btn-small btn-delete">Удалить</button>
+                <button type="submit" class="btn-small btn-delete">Удалить</button>
               </form>
             </td>
           </tr>
         {% endfor %}
       {% else %}
         <tr>
-          <td colspan="6" style="text-align:center; color:#2c7a7b;">Нет данных. Добавьте первый город.</td>
+          <td colspan="6" class="empty-row">Нет данных. Добавьте первый город.</td>
         </tr>
       {% endif %}
     </tbody>
   </table>
+
+  <!-- Кнопка назад -->
+  <div style="text-align:right;">
+    <a href="#" class="back-button" onclick="goBack()">← Назад</a>
+  </div>
 </div>
+
+<script>
+  function goBack() {
+    if (document.referrer && document.referrer !== window.location.href) {
+      history.back();
+    } else {
+      window.location.href = "{% url 'profile' %}";
+    }
+  }
+</script>
 {% endblock %}

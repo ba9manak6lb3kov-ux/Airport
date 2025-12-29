@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Мои рейсы — FlyFind{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+  <h2 style="text-align:center; color:#045d75;">Мои рейсы</h2>
+
+  {% if bookings %}
+    <table style="width:100%; border-collapse:collapse; margin-top:20px;">
+      <thead>
+        <tr style="background:#e0f7f5;">
+          <th style="padding:10px;">Авиакомпания</th>
+          <th>Маршрут</th>
+          <th>Вылет</th>
+          <th>Билеты</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+          <tr style="border-bottom:1px solid #eee;">
+            <td style="padding:10px;">{{ b.flight.airline }}</td>
+            <td>{{ b.flight.origin.name }} → {{ b.flight.destination.name }}</td>
+            <td>{{ b.flight.departure_time|date:"d.m.Y H:i" }}</td>
+            <td>{{ b.tickets }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="text-align:center; color:#2c7a7b; margin-top:20px;">
+      Вы пока не зарегистрированы ни на один рейс.
+    </p>
+  {% endif %}
+
+  <div style="text-align:center; margin-top:30px;">
+    <a href="{% url 'profile' %}"
+       style="background:#00bfa5; color:white; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:600;">
+       ← Назад в профиль
+    </a>
+  </div>
+</div>
+{% endblock %}

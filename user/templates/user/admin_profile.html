@@ -6,46 +6,49 @@
 {% block extra_head %}
 <style>
   .admin-container {
-    max-width: 700px;
-    margin: 60px auto;
+    max-width: 900px;
+    margin: 40px auto;
     background: #ffffff;
     border-radius: 16px;
     padding: 30px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
     border: 1px solid #e0f7f5;
   }
 
-  .admin-container h2 {
+  .admin-header {
     text-align: center;
-    color: #045d75;
     margin-bottom: 20px;
   }
 
-  .admin-container p {
-    font-size: 16px;
-    color: #2c7a7b;
-    margin-bottom: 12px;
+  .admin-header h2 {
+    color: #045d75;
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
   }
 
   .admin-actions {
     display: grid;
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
     margin-top: 20px;
   }
 
-  .admin-actions a {
-    display: block;
+  .btn--accent {
     background: linear-gradient(to right, #00c9a7, #00bfa5);
     color: white;
-    padding: 12px;
+    padding: 12px 20px;
     border-radius: 10px;
-    text-align: center;
     font-weight: 600;
     text-decoration: none;
     transition: background 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    display: block;
   }
 
-  .admin-actions a:hover {
+  .btn--accent:hover {
     background: linear-gradient(to right, #00bfa5, #00a896);
   }
 </style>
@@ -53,15 +56,16 @@
 
 {% block content %}
 <div class="admin-container">
-  <h2>Добро пожаловать, {{ user.username }} (Админ)</h2>
-  <p>Ты находишься в админ-панели FlyFind.</p>
-  <p>Здесь доступны инструменты управления:</p>
+  <div class="admin-header">
+    <h2>Админ-панель FlyFind</h2>
+    <p>Добро пожаловать, {{ request.user.username }}!</p>
+  </div>
 
   <div class="admin-actions">
-    <a href="#">Управление пользователями</a>
-    <a href="{% url 'airplan' %}">Управление рейсами</a>
-    <a href="#">Просмотр бронирований</a>
-    <a href="{% url 'logout' %}">Выйти</a>
+    <a href="{% url 'flights_manage' %}" class="btn--accent">✈ Управление рейсами</a>
+    <a href="{% url 'city_list' %}" class="btn--accent">🏙 Управление городами</a>
+    <a href="{% url 'flights_map' %}" class="btn--accent">🗺 Карта рейсов</a>
+    <a href="{% url 'all_bookings' %}" class="btn--accent">📋 Все бронирования</a>
   </div>
 </div>
 {% endblock %}

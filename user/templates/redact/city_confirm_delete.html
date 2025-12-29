@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Удалить город — FlyFind{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h2>Удалить город</h2>
+  <p>Вы уверены, что хотите удалить город <strong>{{ city.name }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn--accent">Удалить</button>
+    <a href="{% url 'city_list' %}" class="back-button">Отмена</a>
+  </form>
+</div>
+{% endblock %}

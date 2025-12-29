@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  Редактирование города — FlyFind
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  .city-form {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border: 1px solid #e0f7f5;
+  }
+
+  .city-form h2 {
+    text-align: center;
+    color: #045d75;
+    margin-bottom: 20px;
+  }
+
+  .city-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #2c7a7b;
+  }
+
+  .city-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: 1px solid #b2e4e0;
+    background: #f7fcfc;
+    font-size: 16px;
+  }
+
+  .city-form input:focus {
+    border-color: #00bfa5;
+    outline: none;
+  }
+
+  .btn--accent {
+    background: linear-gradient(to right, #00c9a7, #00bfa5);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn--accent:hover {
+    background: linear-gradient(to right, #00bfa5, #00a896);
+  }
+
+  .actions-row {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="city-form">
+  <h2>Редактирование города</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div>
+      {{ form.name.label_tag }}
+      {{ form.name }}
+    </div>
+    <div>
+      {{ form.region.label_tag }}
+      {{ form.region }}
+    </div>
+    <div>
+      {{ form.latitude.label_tag }}
+      {{ form.latitude }}
+    </div>
+    <div>
+      {{ form.longitude.label_tag }}
+      {{ form.longitude }}
+    </div>
+
+    <div class="actions-row">
+      <a href="{% url 'city_list' %}" class="btn--accent" style="background:#6c757d;">Отмена</a>
+      <button type="submit" class="btn--accent">Сохранить</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

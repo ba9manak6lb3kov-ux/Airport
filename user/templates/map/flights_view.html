@@ -1,59 +1,156 @@
 {% extends "base.html" %}
-{% block title %}Карта рейсов — FlyFind{% endblock %}
+{% load static %}
+
+{% block title %}Просмотр рейсов — FlyFind{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <style>
-  #map {
-    height: 600px;
-    border-radius: 12px;
-    margin: 20px auto;
+  .flights-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    border: 1px solid #b2e4e0;
   }
+
+  .flights-header {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .flights-header h2 {
+    color: #045d75;
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 15px;
+  }
+
+  table th, table td {
+    border: 1px solid #a0cfc9;
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+    color: #045d75;
+  }
+
+  table th {
+    background: #ccebe9;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+  table td {
+    background: #f9fdfd;
+  }
+
+  .status {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 4px 10px;
+    color: #fff;
+    display: inline-block;
+    min-width: 90px;
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+  .status.on-time { background: #00bfa5; }
+  .status.delayed { background: #d9534f; }
+  .status.cancelled { background: #6c757d; }
+
+  .class-type {
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 8px;
+    display: inline-block;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+  .class-type.Эконом { background: #e0f7f5; color: #045d75; border: 1px solid #045d75; }
+  .class-type.Бизнес { background: #004085; color: #fff; }
+
+  .back-button {
+    display: inline-block;
+    margin-top: 30px;
+    background: #045d75;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+  .back-button:hover { background: #03495c; }
 </style>
 {% endblock %}
 
 {% block content %}
-<h2 style="text-align:center; color:#045d75;">Карта рейсов по Кыргызстану</h2>
-<div id="map"></div>
+<div class="flights-container">
+  <div class="flights-header">
+    <h2>Список рейсов</h2>
+  </div>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-  // Инициализация карты
-  var map = L.map('map').setView([41.9, 74.6], 6); // центр Кыргызстана
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Авиакомпания</th>
+        <th>Откуда</th>
+        <th>Куда</th>
+        <th>Вылет</th>
+        <th>Прилёт</th>
+        <th>Места</th>
+        <th>Класс</th>
+        <th>Статус</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if flights %}
+        {% for flight in flights %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><strong>{{ flight.airline }}</strong></td>
+            <td>{{ flight.origin.name }}</td>
+            <td>{{ flight.destination.name }}</td>
+            <td>{{ flight.departure_time|date:"d.m.Y H:i" }}</td>
+            <td>{{ flight.arrival_time|date:"d.m.Y H:i" }}</td>
+            <td>{{ flight.seats_available }}</td>
+            <td>
+              <span class="class-type {{ flight.class_type }}">
+                {{ flight.class_type }}
+              </span>
+            </td>
+            <td>
+              <span class="status
+                {% if flight.status == 'В пути' or flight.status == 'On Time' %}on-time
+                {% elif flight.status == 'Задержан' or flight.status == 'Delayed' %}delayed
+                {% else %}cancelled{% endif %}">
+                {{ flight.status }}
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="9" style="text-align:center; color:#2c7a7b; font-style:italic;">
+            Рейсов пока нет
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
 
-  // Подложка карты
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
-
-  // Пример рейсов (можно динамически подгружать из Django)
-  var flights = [
-    {
-      airline: "Air Kyrgyzstan",
-      origin: "Бишкек",
-      destination: "Ош",
-      departure: "2025-12-23 08:00",
-      arrival: "2025-12-23 09:00",
-      coords: [40.53, 72.79] // точка назначения (Ош)
-    },
-    {
-      airline: "TezJet",
-      origin: "Бишкек",
-      destination: "Баткен",
-      departure: "2025-12-23 10:00",
-      arrival: "2025-12-23 11:30",
-      coords: [40.06, 70.82]
-    }
-  ];
-
-  flights.forEach(function(flight) {
-    L.marker(flight.coords).addTo(map)
-      .bindPopup(
-        "<b>" + flight.airline + "</b><br>" +
-        flight.origin + " → " + flight.destination + "<br>" +
-        "Вылет: " + flight.departure + "<br>" +
-        "Прилёт: " + flight.arrival
-      );
-  });
-</script>
+  <div style="text-align:right;">
+    <a href="{% url 'profile' %}" class="back-button">← Назад</a>
+  </div>
+</div>
 {% endblock %}
