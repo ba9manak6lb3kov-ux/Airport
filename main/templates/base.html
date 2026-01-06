@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="FlyFind — Поиск авиабилетов и маршрутов по Кыргызстану" />
+  <meta name="description" content="FlyFind — Поиск авиабилетов, отелей и еды по Кыргызстану" />
   <title>{% block title %}FlyFind — Поиск авиабилетов{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'main/css/main.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,6 +18,7 @@
       <nav class="nav">
         <a href="{% url 'home' %}">Авиабилеты</a>
         <a href="">Отели</a>
+        <a href="">Еда</a>
         <a href="{% url 'flights_map' %}">Карта рейсов</a>
         {% if user.is_authenticated %}
           <a href="{% url 'my_bookings' %}">Мои рейсы</a>

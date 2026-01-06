@@ -36,10 +36,7 @@
   border-radius: 14px;
   padding: 16px;
   margin-bottom: 14px;
-  cursor: pointer;
-  transition: all .2s ease;
 }
-.flight-item:hover { background: #eefaf9; transform: translateY(-2px); }
 .flight-header { font-size: 16px; font-weight: 700; color: #045d75; }
 .flight-route { font-size: 15px; font-weight: 600; margin: 10px 0; color: #1f2937; }
 .flight-info {
@@ -73,15 +70,6 @@
   font-weight: 600;
 }
 .back-button:hover { background: #5a6268; }
-.plane-pulse {
-  width: 72px; height: 72px;
-  background: rgba(0,191,165,0.25);
-  border-radius: 50%;
-  animation: pulse 1.8s infinite;
-  display: flex; align-items: center; justify-content: center;
-}
-.plane-pulse img { width: 40px; height: 40px; }
-@keyframes pulse { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
 </style>
 {% endblock %}
 
@@ -95,27 +83,15 @@
     <h3>Список рейсов</h3>
 
     {% for flight in flights %}
-      <div class="flight-item"
-           data-lat1="{{ flight.origin.latitude }}"
-           data-lon1="{{ flight.origin.longitude }}"
-           data-lat2="{{ flight.destination.latitude }}"
-           data-lon2="{{ flight.destination.longitude }}"
-           data-origin="{{ flight.origin.name }}"
-           data-destination="{{ flight.destination.name }}"
-           data-dep="{{ flight.departure_time|date:'d.m.Y H:i' }}"
-           data-arr="{{ flight.arrival_time|date:'d.m.Y H:i' }}">
-
+      <div class="flight-item">
         <div class="flight-header">✈ {{ flight.airline }}</div>
-
         <div class="flight-route">{{ flight.origin.name }} → {{ flight.destination.name }}</div>
-
         <div class="flight-info">
           <span class="label">Вылет:</span><span class="value">{{ flight.departure_time|date:"d.m.Y H:i" }}</span>
           <span class="label">Прилёт:</span><span class="value">{{ flight.arrival_time|date:"d.m.Y H:i" }}</span>
           <span class="label">Места:</span><span class="value">{{ flight.seats_available }}</span>
           <span class="label">Класс:</span><span class="value">{{ flight.class_type }}</span>
         </div>
-
         <div class="flight-status">{{ flight.status }}</div>
       </div>
     {% empty %}
@@ -133,52 +109,8 @@
 
 <script>
 const map = L.map('map').setView([41.9, 74.6], 6);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
-
-const planeIcon = L.divIcon({
-  className: '',
-  html: `<div class="plane-pulse"><img src="{% static 'images/plane.png' %}"></div>`,
-  iconSize: [72, 72], iconAnchor: [36, 36]
-});
-
-let routeLine = null, airportMarkers = [], planeMarker = null, animationId = null;
-
-function clearMap() {
-  if (routeLine) map.removeLayer(routeLine);
-  airportMarkers.forEach(m => map.removeLayer(m));
-  airportMarkers = [];
-  if (planeMarker) map.removeLayer(planeMarker);
-  planeMarker = null;
-  if (animationId) cancelAnimationFrame(animationId);
-}
-
-function animatePlane(start, end, duration = 4000) {
-  const startTime = performance.now();
-  function step(time) {
-    const progress = Math.min((time - startTime) / duration, 1);
-    const lat = start[0] + (end[0] - start[0]) * progress;
-    const lng = start[1] + (end[1] - start[1]) * progress;
-    planeMarker.setLatLng([lat, lng]);
-    map.panTo([lat, lng], { animate: false });
-    if (progress < 1) animationId = requestAnimationFrame(step);
-  }
-  animationId = requestAnimationFrame(step);
-}
-
-document.querySelectorAll('.flight-item').forEach(item => {
-  item.addEventListener('click', () => {
-    clearMap();
-    const start = [parseFloat(item.dataset.lat1), parseFloat(item.dataset.lon1)];
-    const end = [parseFloat(item.dataset.lat2), parseFloat(item.dataset.lon2)];
-    routeLine = L.polyline([start, end], { color: '#00bfa5', weight: 4 }).addTo(map);
-    airportMarkers.push(
-      L.marker(start).addTo(map).bindPopup(`<b>${item.dataset.origin}</b><br>Вылет: ${item.dataset.dep}`),
-      L.marker(end).addTo(map).bindPopup(`<b>${item.dataset.destination}</b><br>Прилёт: ${item.dataset.arr}`)
-    );
-    planeMarker = L.marker(start, { icon: planeIcon }).addTo(map);
-    map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
-    animatePlane(start, end);
-  });
-});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
 </script>
 {% endblock %}
