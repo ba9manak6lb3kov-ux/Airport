@@ -13,6 +13,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('user/', include('user.urls')),
     path('accounts/', include('accounts.urls')),
+    path('food/', include('food.urls')),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

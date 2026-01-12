@@ -17,7 +17,7 @@ urlpatterns = [
     path("user/flights/<int:pk>/edit/", views.flight_update, name="flight_update"),
 
 
-
+    # Страница где видны бронирования
     path("my-bookings/", views.my_bookings, name="my_bookings"),
     path("dashboard/bookings/", views.all_bookings, name="all_bookings"),
 

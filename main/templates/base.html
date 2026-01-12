@@ -17,8 +17,7 @@
       <div class="logo">✈ FlyFind</div>
       <nav class="nav">
         <a href="{% url 'home' %}">Авиабилеты</a>
-        <a href="">Отели</a>
-        <a href="">Еда</a>
+        <a href="{% url 'food' %}">Еда</a>
         <a href="{% url 'flights_map' %}">Карта рейсов</a>
         {% if user.is_authenticated %}
           <a href="{% url 'my_bookings' %}">Мои рейсы</a>

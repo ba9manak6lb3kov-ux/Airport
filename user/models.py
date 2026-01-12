@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-
+# Справочник городов Кыргызстана-
 class City(models.Model):
     name = models.CharField("Город", max_length=100)
     region = models.CharField("Область", max_length=100)
@@ -12,6 +12,7 @@ class City(models.Model):
         return f"{self.name} ({self.region})"
 
 
+# Рейсы между городами
 class Flight(models.Model):
     airline = models.CharField("Авиакомпания", max_length=100)
     origin = models.ForeignKey(
@@ -40,8 +41,14 @@ class Flight(models.Model):
     def __str__(self):
         return f"{self.airline}: {self.origin} → {self.destination}"
 
+
+# Модель которая хранить все бронирования user
 class Booking(models.Model):
+    # кто бранировал
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # какой рейс
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
+    # колво билет
     tickets = models.PositiveIntegerField()
+    # дата бронирования
     booked_at = models.DateTimeField(auto_now_add=True)

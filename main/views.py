@@ -4,23 +4,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 
-
+# Проверка формы поиска
 def filter_flights(form):
-    # Если форма не отправлена или невалидна — ничего не показываем
     if not form.is_valid():
         return None
-
+    # откуда
     origin = form.cleaned_data.get('origin')
+    # куда
     destination = form.cleaned_data.get('destination')
 
-    # Поиск только если указаны оба города
+    # Показ рейсов если оба города написаны правильно
     if not origin or not destination:
         return None
 
     flights = Flight.objects.all()
-
+    # Колво пассажир
     passengers = form.cleaned_data.get('passengers')
+    # классы - об. биз.
     class_type = form.cleaned_data.get('class_type')
+    # по дате
     depart_date = form.cleaned_data.get('depart_date')
 
     # Обязательные фильтры
@@ -41,7 +43,7 @@ def filter_flights(form):
 
     return flights
 
-
+# главная страница
 def index(request):
     form = FlightSearchForm(request.GET or None)
     flights = filter_flights(form)
@@ -51,7 +53,7 @@ def index(request):
         'flights': flights
     })
 
-
+#страница поиска рейсов
 def search(request):
     form = FlightSearchForm(request.GET or None)
     flights = filter_flights(form)
@@ -63,17 +65,19 @@ def search(request):
 
 
 
-
+# Находим рейс по ID или (особому ключу)
 def book_flight(request, pk):
     flight = get_object_or_404(Flight, pk=pk)
 
     if request.method == "POST":
+        # Колво билет
         tickets = int(request.POST.get("tickets", 1))
 
         if tickets <= flight.seats_available:
+            # проверка мест
             flight.seats_available -= tickets
             flight.save()
-
+            # Запись
             Booking.objects.create(
                 user=request.user,
                 flight=flight,

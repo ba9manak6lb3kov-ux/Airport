@@ -1,15 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
 from .forms import CityForm, FlightForm
 from .models import Flight, City
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from .models import Booking
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 
-#Личный кабинет
+
+#Личный кабинет обычного/админа
 @login_required
 def profile_view(request):
-    if request.user.is_staff:  # админ
+    if request.user.is_staff:
         return render(request, 'user/admin_profile.html')
     return render(request, 'user/user_profile.html')
 
@@ -97,6 +100,7 @@ def flight_manage(request):
     return render(request, "redact1/flight_manage.html", {"flights": flights})
 
 
+# Удаление города
 def city_delete(request, pk):
     city = get_object_or_404(City, pk=pk)
     if request.method == "POST":
@@ -105,26 +109,24 @@ def city_delete(request, pk):
     return render(request, "redact/city_confirm_delete.html", {"city": city})
 
 
+# Только для автор. польз.
 
-
+# Удаление рейса
 @require_POST
 def flight_delete(request, pk):
     flight = get_object_or_404(Flight, pk=pk)
     flight.delete()
     return redirect("flights_manage")
 
-
-from django.contrib.auth.decorators import login_required
-from .models import Booking
-
+# Страница где показаны мои бронирования
 @login_required
 def my_bookings(request):
     bookings = Booking.objects.filter(user=request.user)
     return render(request, "user/my_bookings.html", {"bookings": bookings})
 
+# Доступ для админа
 
-from django.contrib.admin.views.decorators import staff_member_required
-
+# Даёт страницу где все бронирования
 @staff_member_required
 def all_bookings(request):
     bookings = Booking.objects.select_related("user", "flight")

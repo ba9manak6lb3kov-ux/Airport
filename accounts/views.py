@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
 
 
-
+# Отвечает за вход
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -12,9 +12,10 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('profile')  # редиректим в личный кабинет
+            return redirect('profile')
     return render(request, 'auth/login.html')
 
+# Отвечает за регистрацию
 def register_view(request):
     form = UserCreationForm()
     if request.method == 'POST':
@@ -24,7 +25,7 @@ def register_view(request):
             return redirect('login')
     return render(request, 'auth/register.html', {'form': form})
 
-
+#отвечает за выход (выход из акк или из системы)
 def logout_view(request):
-    logout(request)  # очищает сессию
-    return redirect('login')  # редиректим на страницу входа
+    logout(request)
+    return redirect('login')
